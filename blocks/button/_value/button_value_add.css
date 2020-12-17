@@ -12,6 +12,10 @@
   margin-left: auto;
 }
 
+.button_value_add:hover {
+  opacity: 0.6;
+}
+
 @media screen and (max-width: 640px) {
   .button_value_add {
     width: 282px;

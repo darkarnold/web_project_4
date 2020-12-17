@@ -11,3 +11,7 @@
   box-sizing: border-box;
   margin-left: 18px;
 }
+
+.button_value_edit:hover {
+  opacity: 0.6;
+}
