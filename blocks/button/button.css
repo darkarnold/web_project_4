@@ -1,6 +1,8 @@
 @import url("./_value/button_value_edit.css");
 @import url("./_value/button_value_add.css");
+@import url("./_value/button_value_save.css");
 
 .button {
   cursor: pointer;
+  padding: 0;
 }
