@@ -1,0 +1,19 @@
+.button_value_close {
+  background-image: url("../../../images/Close-Icon.svg");
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0);
+  background-size: contain;
+  border: 0;
+  position: absolute;
+  top: -40px;
+  right: -30px;
+}
+
+@media screen and (max-width: 640px) {
+  .button_value_close {
+    width: 26px;
+    height: 26px;
+    right: 0;
+  }
+}

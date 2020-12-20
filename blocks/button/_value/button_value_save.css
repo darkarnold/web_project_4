@@ -1,6 +1,6 @@
 .button_value_save {
   width: 358px;
-  margin: 48px auto 36px;
+  margin: 48px 0 36px;
   background-color: #000;
   border-radius: 2px;
   color: #fff;
@@ -20,6 +20,6 @@
     width: 238px;
     font-size: 14px;
     height: 46px;
-    margin: 45px auto 25px;
+    margin: 45px 0 25px;
   }
 }
