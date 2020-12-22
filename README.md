@@ -1,16 +1,29 @@
 # Project 4: Around The U.S.
 
-### Overview
+## Overview
 
-* Figma
-* Images
+- Project description
+- Technology stack ,techniques and tools used
+- Figma
+- Project Link
 
-**Figma**
+## Project description
 
-* [Link to the project in Figma](https://www.figma.com/file/mUgu8OSHWE0M6p6vfwmdu9/Sprint-4-Around-The-U.S.-desktop-mobile?node-id=0%3A1)
+This is a web project showcasing the profile of a traveller around the US and a gallery of places visited.
 
-**Images**
+## Technology stack, techniques and tools used
 
-The way you'll do this at work is by exporting images directly from Figma — we recommend doing that to practice more. Don't forget to optimize them [here](https://tinypng.com/), so your project loads faster. 
+- HTML
+- CSS
+- BEM Methodology
+- Responsive design
+- JavaScript
+- VS Code
 
-Have fun with JavaScript!
+## Figma
+
+[Link to the project design in Figma](https://www.figma.com/file/mUgu8OSHWE0M6p6vfwmdu9/Sprint-4-Around-The-U.S.-desktop-mobile?node-id=0%3A1)
+
+## Project Link
+
+[Around The US project]()

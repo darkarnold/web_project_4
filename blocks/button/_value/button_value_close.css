@@ -10,6 +10,10 @@
   right: -30px;
 }
 
+.button_value_close:hover {
+  opacity: 0.6;
+}
+
 @media screen and (max-width: 640px) {
   .button_value_close {
     width: 26px;
