@@ -3,6 +3,9 @@
   width: 20px;
   height: 18px;
   cursor: pointer;
+  padding: 0;
+  border: none;
+  background-color: #fff;
 }
 
 .place__like-icon:hover {
