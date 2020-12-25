@@ -1,5 +1,6 @@
 @import url("./__avatar/profile__avatar.css");
 @import url("./__info/profile__info.css");
+@import url("./__name-container/profile__name-container.css");
 @import url("./__info-name/profile__info-name.css");
 @import url("./__info-subtitle/profile__info-subtitle.css");
 
@@ -8,12 +9,12 @@
   max-width: 880px;
   margin: 0 auto;
   padding-top: 40px;
-  align-items: center;
 }
 
 @media screen and (max-width: 640px) {
   .profile {
     max-width: 282px;
     flex-direction: column;
+    align-items: center;
   }
 }

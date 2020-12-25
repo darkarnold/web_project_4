@@ -9,6 +9,7 @@
   background-color: transparent;
   box-sizing: border-box;
   margin-left: auto;
+  align-self: center;
 }
 
 .button_value_add:hover {
@@ -18,6 +19,6 @@
 @media screen and (max-width: 640px) {
   .button_value_add {
     width: 282px;
-    margin: 36px auto 0;
+    margin: 36px 0 0;
   }
 }

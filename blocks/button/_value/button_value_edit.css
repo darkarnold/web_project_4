@@ -14,3 +14,11 @@
 .button_value_edit:hover {
   opacity: 0.6;
 }
+
+@media screen and (max-width: 640px) {
+  .button_value_edit {
+    width: 18px;
+    height: 18px;
+    margin-left: 10px;
+  }
+}
