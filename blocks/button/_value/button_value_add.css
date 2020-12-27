@@ -16,6 +16,13 @@
   opacity: 0.6;
 }
 
+@media screen and (max-width: 1024px) {
+  .button_value_add {
+    margin: 36px auto 0;
+    width: calc(100% / 2);
+  }
+}
+
 @media screen and (max-width: 640px) {
   .button_value_add {
     width: 282px;

@@ -6,3 +6,9 @@
   height: 120px;
   background-position: center;
 }
+
+@media screen and (max-width: 1024px) {
+  .profile__avatar {
+    margin: 0 auto;
+  }
+}
