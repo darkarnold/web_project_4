@@ -15,29 +15,42 @@ let jobFormInput = popupForm.querySelector('.popup__input_val_job');
 let profileName = profileInfo.querySelector(".profile__info-name");
 let profileTitle = profileInfo.querySelector(".profile__info-subtitle");
 
-// Editing popup form 
-popupForm.addEventListener('submit',function(evt){
-  evt.preventDefault();
+// functions to toggle the opening and closing of the popup modal
 
-  // change content of the profile section
-  profileName.textContent = nameFormInput.value;
-  profileTitle.textContent = jobFormInput.value;
+function openModal() {
+  popupModal.classList.add('popup_opened');
 
-  // call to close or open the modal
-  toggleModal()
-  
-})
+  // Read content of the profile section and store it as the value for the form
+  nameFormInput.value = profileName.textContent;
+  jobFormInput.value =  profileTitle.textContent;
 
-// function to toggle the opening and closing of the popup modal
+}
 
-function toggleModal() {
-  popupModal.classList.toggle('popup_opened');
+function closeModal() {
+  popupModal.classList.remove('popup_opened');
 }
 
 
+// submit handler function
+function formSubmitHandler(evt) {
+  evt.preventDefault();
+
+ // change content of the profile section
+ profileName.textContent = nameFormInput.value;
+ profileTitle.textContent = jobFormInput.value;
+
+  // call to close the modal
+  closeModal();
+  
+}
+// Saving popup form content 
+popupForm.addEventListener('submit',formSubmitHandler);
+
+
+
 // Open the popup modal
-editButton.addEventListener('click',toggleModal);
+editButton.addEventListener('click',openModal);
  
 
   // Close the popup modal
-closeButton.addEventListener('click',toggleModal);
+closeButton.addEventListener('click',closeModal);
