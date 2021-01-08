@@ -4,6 +4,9 @@
 @import url("./__input/_val/popup__input_val_name.css");
 @import url("./__input/_val/popup__input_val_job.css");
 @import url("./__input/popup__input.css");
+@import url("./__figure/popup__figure.css");
+@import url("./__image/popup__image.css");
+@import url("./__image-title/popup__image-title.css");
 
 .popup {
   display: none;
