@@ -13,7 +13,8 @@ const addPlaceButton = profile.querySelector(".button_value_add");
 const editPopupModal = pageContainer.querySelector(".popup_type_edit-profile");
 const placeModal = pageContainer.querySelector(".popup_type_add-place");
 const displayImageModal = pageContainer.querySelector(".popup_type_display-image");
-const popupForm = pageContainer.querySelector(".popup__form");
+const editProfilePopupForm = pageContainer.querySelector(".popup__form_type_edit-profile");
+const addPlacePopupForm = pageContainer.querySelector(".popup__form_type_add-place");
 
 
 // close modal buttons
@@ -22,22 +23,19 @@ const closePlaceModal = placeModal.querySelector(".button_value_close");
 const closeDisplayImageModal = displayImageModal.querySelector(".button_value_close");
 
 // select the input fields
-const nameFormInput = popupForm.querySelector('.popup__input_val_name');
-const jobFormInput = popupForm.querySelector('.popup__input_val_job');
+const nameFormInput = editProfilePopupForm.querySelector('.popup__input_val_name');
+const jobFormInput = editProfilePopupForm.querySelector('.popup__input_val_job');
+const titleFormInput = addPlacePopupForm.querySelector(".popup__input_val_title");
+const linkFormInput = addPlacePopupForm.querySelector(".popup__input_val_link");
 
 // select the profile section fields
 const profileName = profileInfo.querySelector(".profile__info-name");
 const profileTitle = profileInfo.querySelector(".profile__info-subtitle");
 
-// functions to toggle the opening and closing of the popup modal
+// functions to toggle the opening and closing of the popup modals
 
-function openModal() {
-  editPopupModal.classList.add('popup_opened');
-
-  // Read content of the profile section and store it as the value for the form
-  nameFormInput.value = profileName.textContent;
-  jobFormInput.value =  profileTitle.textContent;
-
+function openModal(modal) {
+  modal.classList.add('popup_opened');
 }
 
 function closeModal(modal) {
@@ -59,13 +57,20 @@ function formSubmitHandler(evt) {
   
 }
 
+
 //open add place modal
 addPlaceButton.addEventListener("click", ()=>{
-  placeModal.classList.add('popup_opened');
+  openModal(placeModal);
 });
 
 // Open the edit-profile modal
-editButton.addEventListener('click',openModal);
+editButton.addEventListener('click',() =>{
+  openModal(editPopupModal);
+  // Read content of the profile section and store it as the value for the form
+  nameFormInput.value = profileName.textContent;
+  jobFormInput.value =  profileTitle.textContent;
+
+});
 
 // close the add-place modal
 closePlaceModal.addEventListener("click",() => {
@@ -82,8 +87,8 @@ closeDisplayImageModal.addEventListener('click', () =>{
   closeModal(displayImageModal);
 });
 
-// Saving popup form content 
-popupForm.addEventListener('submit',formSubmitHandler);
+// Saving edit profile popup form content 
+editProfilePopupForm.addEventListener('submit',formSubmitHandler);
 
 
 
@@ -126,8 +131,8 @@ const cardTemplate = document.querySelector(".card-template").content.querySelec
 
 const places = pageContainer.querySelector(".places__grid");
 
-//iterate over array of cards
-initialCards.forEach((data) =>{
+// create place cards
+const createPlaceCard = (data) =>{
   const cardElement = cardTemplate.cloneNode(true);
 
   const placeImage = cardElement.querySelector(".place__image");
@@ -140,6 +145,7 @@ initialCards.forEach((data) =>{
   placeImage.alt = data.alt;
   placeName.textContent = data.name;
 
+ // Display popup image by clicking on the image
   placeImage.addEventListener("click", () =>{
     const popupImage = displayImageModal.querySelector(".popup__image");
     const popupImageTitle = displayImageModal.querySelector(".popup__image-title");
@@ -147,7 +153,7 @@ initialCards.forEach((data) =>{
     popupImage.src = data.link;
     popupImageTitle.textContent = data.name;
 
-    displayImageModal.classList.add("popup_opened");
+    openModal(displayImageModal);
   });
 
   placeLikeIcon.addEventListener("click", () =>{
@@ -156,8 +162,40 @@ initialCards.forEach((data) =>{
 
   placeDeleteIcon.addEventListener("click", () =>{
     // delete place card
-  })
+  });
 
-  places.append(cardElement);
+  return cardElement;
 
-})
+};
+
+//iterate over array of cards
+ initialCards.forEach((data) =>{
+   const card = createPlaceCard(data);
+  
+  places.append(card);
+
+});
+
+
+// add new place -image function
+function addPlaceSubmitHandler(evt) {
+  evt.preventDefault();
+
+  const newPlaceTitle = titleFormInput.value;
+  const newPlaceURL = linkFormInput.value;
+
+  // New place card object
+  const newPlaceObject = {
+    name: newPlaceTitle,
+    link: newPlaceURL
+  };
+
+  const card = createPlaceCard(newPlaceObject);
+  places.prepend(card);
+
+  closeModal(placeModal);
+};
+
+addPlacePopupForm.addEventListener("submit",addPlaceSubmitHandler);
+
+
