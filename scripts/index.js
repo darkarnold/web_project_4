@@ -162,6 +162,7 @@ const createPlaceCard = (data) =>{
 
   placeDeleteIcon.addEventListener("click", () =>{
     // delete place card
+    cardElement.remove();
   });
 
   return cardElement;
