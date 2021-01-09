@@ -11,6 +11,8 @@
 
 This is a web project showcasing the profile of a traveller around the US and a gallery of places visited.
 
+A user can change the descriptions of the profile user and add a name and image of the place they have visited to the web page.
+
 ## Technology stack, techniques and tools used
 
 - HTML
