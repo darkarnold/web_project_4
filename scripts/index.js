@@ -40,6 +40,7 @@ function openModal(modal) {
 
 function closeModal(modal) {
   modal.classList.remove('popup_opened');
+// use escape key to close modal
 }
 
 
@@ -89,6 +90,10 @@ closeDisplayImageModal.addEventListener('click', () =>{
 
 // Saving edit profile popup form content 
 editProfilePopupForm.addEventListener('submit',formSubmitHandler);
+
+
+
+
 
 
 
