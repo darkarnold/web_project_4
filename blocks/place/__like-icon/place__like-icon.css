@@ -6,6 +6,7 @@
   padding: 0;
   border: none;
   background-color: #fff;
+  outline: none;
 }
 
 .place__like-icon:hover {

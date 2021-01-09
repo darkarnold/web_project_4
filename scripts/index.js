@@ -158,6 +158,7 @@ const createPlaceCard = (data) =>{
 
   placeLikeIcon.addEventListener("click", () =>{
     // change state of like button
+    placeLikeIcon.classList.toggle("place__like-icon_active");
   });
 
   placeDeleteIcon.addEventListener("click", () =>{
