@@ -16,7 +16,10 @@ const displayImageModal = pageContainer.querySelector(".popup_type_display-image
 const editProfilePopupForm = pageContainer.querySelector(".popup__form_type_edit-profile");
 const addPlacePopupForm = pageContainer.querySelector(".popup__form_type_add-place");
 
-
+//popup image section
+const popupImage = displayImageModal.querySelector(".popup__image");
+const popupImageTitle = displayImageModal.querySelector(".popup__image-title");
+    
 // close modal buttons
 const editCloseButton = editPopupModal.querySelector(".button_value_close");
 const closePlaceModal = placeModal.querySelector(".button_value_close");
@@ -43,8 +46,6 @@ function closeModal(modal) {
 // use escape key to close modal
 }
 
-
-
 //  edit profile submit  function
 function formSubmitHandler(evt) {
   evt.preventDefault();
@@ -57,7 +58,6 @@ function formSubmitHandler(evt) {
   closeModal(editPopupModal);
   
 }
-
 
 //open add place modal
 addPlaceButton.addEventListener("click", ()=>{
@@ -90,12 +90,6 @@ closeDisplayImageModal.addEventListener('click', () =>{
 
 // Saving edit profile popup form content 
 editProfilePopupForm.addEventListener('submit',formSubmitHandler);
-
-
-
-
-
-
 
 // Card rendering
 
@@ -152,8 +146,6 @@ const createPlaceCard = (data) =>{
 
  // Display popup image by clicking on the image
   placeImage.addEventListener("click", () =>{
-    const popupImage = displayImageModal.querySelector(".popup__image");
-    const popupImageTitle = displayImageModal.querySelector(".popup__image-title");
     
     popupImage.src = data.link;
     popupImageTitle.textContent = data.name;
