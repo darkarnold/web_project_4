@@ -46,6 +46,25 @@ function closeModal(modal) {
 // use escape key to close modal
 }
 
+// close modals using esc key
+
+const popupModals = Array.from(pageContainer.querySelectorAll('.popup'));
+
+popupModals.forEach(popup =>{
+  document.addEventListener("keydown", (evt) =>{
+    if(evt.key === "Escape"){
+      closeModal(popup);
+    }
+  });
+  // close popup by clicking the overlay
+  document.addEventListener("click",(evt) =>{
+    if(evt.target.classList.contains('popup')){
+      closeModal(popup);
+    }
+    
+  })
+});
+
 //  edit profile submit  function
 function formSubmitHandler(evt) {
   evt.preventDefault();
