@@ -39,26 +39,30 @@ const profileTitle = profileInfo.querySelector(".profile__info-subtitle");
 
 function openModal(modal) {
   modal.classList.add('popup_opened');
+
+  document.addEventListener("keydown", handleEscPress);
 }
 
 function closeModal(modal) {
   modal.classList.remove('popup_opened');
-// use escape key to close modal
+  document.removeEventListener("keydown",handleEscPress);
 }
 
 // close modals using esc key
 
+function handleEscPress(evt) {
+  const modals= document.querySelector(".popup_opened");
+  if (evt.key === "Escape" && modals) {
+    closeModal(modals);
+  }
+}
+
 const popupModals = Array.from(pageContainer.querySelectorAll('.popup'));
 
-popupModals.forEach(popup =>{
-  document.addEventListener("keydown", (evt) =>{
-    if(evt.key === "Escape"){
-      closeModal(popup);
-    }
-  });
-  // close popup by clicking the overlay
+popupModals.forEach(popup => {
+ // close popup by clicking the overlay
   document.addEventListener("click",(evt) =>{
-    if(evt.target.classList.contains('popup')){
+    if(evt.target.classList.contains('popup')) {
       closeModal(popup);
     }
     
@@ -79,12 +83,12 @@ function formSubmitHandler(evt) {
 }
 
 //open add place modal
-addPlaceButton.addEventListener("click", ()=>{
+addPlaceButton.addEventListener("click", ()=> {
   openModal(placeModal);
 });
 
 // Open the edit-profile modal
-editButton.addEventListener('click',() =>{
+editButton.addEventListener('click',() => {
   openModal(editPopupModal);
   // Read content of the profile section and store it as the value for the form
   nameFormInput.value = profileName.textContent;
@@ -172,12 +176,12 @@ const createPlaceCard = (data) =>{
     openModal(displayImageModal);
   });
 
-  placeLikeIcon.addEventListener("click", () =>{
+  placeLikeIcon.addEventListener("click", () => {
     // change state of like button
     placeLikeIcon.classList.toggle("place__like-icon_active");
   });
 
-  placeDeleteIcon.addEventListener("click", () =>{
+  placeDeleteIcon.addEventListener("click", () => {
     // delete place card
     cardElement.remove();
   });
@@ -212,7 +216,7 @@ function addPlaceSubmitHandler(evt) {
   places.prepend(card);
 
   closeModal(placeModal);
-};
+}
 
 addPlacePopupForm.addEventListener("submit",addPlaceSubmitHandler);
 
