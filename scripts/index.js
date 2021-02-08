@@ -1,4 +1,11 @@
 import FormValidator from "./FormValidation.js";
+import Card from "./Card.js";
+import {
+  pageContainer,
+  displayImageModal,
+  openModal,
+  closeModal,
+} from "./utils.js";
 
 const settings = {
   formSelector: ".popup__form",
@@ -8,9 +15,6 @@ const settings = {
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__error_visible",
 };
-
-// select page elements
-const pageContainer = document.querySelector(".page");
 
 // profile section
 const profile = pageContainer.querySelector(".profile");
@@ -23,19 +27,13 @@ const addPlaceButton = profile.querySelector(".button_value_add");
 //popup section
 const editPopupModal = pageContainer.querySelector(".popup_type_edit-profile");
 const placeModal = pageContainer.querySelector(".popup_type_add-place");
-const displayImageModal = pageContainer.querySelector(
-  ".popup_type_display-image"
-);
+
 const editProfilePopupForm = pageContainer.querySelector(
   ".popup__form_type_edit-profile"
 );
 const addPlacePopupForm = pageContainer.querySelector(
   ".popup__form_type_add-place"
 );
-
-//popup image section
-const popupImage = displayImageModal.querySelector(".popup__image");
-const popupImageTitle = displayImageModal.querySelector(".popup__image-title");
 
 // close modal buttons
 const editCloseButton = editPopupModal.querySelector(".button_value_close");
@@ -59,28 +57,6 @@ const linkFormInput = addPlacePopupForm.querySelector(".popup__input_val_link");
 // select the profile section fields
 const profileName = profileInfo.querySelector(".profile__info-name");
 const profileTitle = profileInfo.querySelector(".profile__info-subtitle");
-
-// functions to toggle the opening and closing of the popup modals
-
-function openModal(modal) {
-  modal.classList.add("popup_opened");
-
-  document.addEventListener("keydown", handleEscPress);
-}
-
-function closeModal(modal) {
-  modal.classList.remove("popup_opened");
-  document.removeEventListener("keydown", handleEscPress);
-}
-
-// close modals using esc key
-
-function handleEscPress(evt) {
-  const modals = document.querySelector(".popup_opened");
-  if (evt.key === "Escape" && modals) {
-    closeModal(modals);
-  }
-}
 
 const popupModals = Array.from(pageContainer.querySelectorAll(".popup"));
 
@@ -177,54 +153,13 @@ const initialCards = [
   },
 ];
 
-const cardTemplate = document
-  .querySelector(".card-template")
-  .content.querySelector(".place");
-
 const places = pageContainer.querySelector(".places__grid");
-
-// create place cards
-const createPlaceCard = (data) => {
-  const cardElement = cardTemplate.cloneNode(true);
-
-  const placeImage = cardElement.querySelector(".place__image");
-  const placeNameContainer = cardElement.querySelector(
-    ".place__name-container"
-  );
-  const placeName = cardElement.querySelector(".place__name");
-  const placeLikeIcon = cardElement.querySelector(".place__like-icon");
-  const placeDeleteIcon = cardElement.querySelector(".place__delete-icon");
-
-  placeImage.src = data.link;
-  placeImage.alt = data.alt;
-  placeName.textContent = data.name;
-
-  // Display popup image by clicking on the image
-  placeImage.addEventListener("click", () => {
-    popupImage.src = data.link;
-    popupImageTitle.textContent = data.name;
-
-    openModal(displayImageModal);
-  });
-
-  placeLikeIcon.addEventListener("click", () => {
-    // change state of like button
-    placeLikeIcon.classList.toggle("place__like-icon_active");
-  });
-
-  placeDeleteIcon.addEventListener("click", () => {
-    // delete place card
-    cardElement.remove();
-  });
-
-  return cardElement;
-};
-
 //iterate over array of cards
 initialCards.forEach((data) => {
-  const card = createPlaceCard(data);
+  const card = new Card(data, ".card-template");
 
-  places.append(card);
+  //render cards
+  places.append(card.createCard());
 });
 
 // add new place -image function
@@ -240,8 +175,9 @@ function addPlaceSubmitHandler(evt) {
     link: newPlaceURL,
   };
 
-  const card = createPlaceCard(newPlaceObject);
-  places.prepend(card);
+  // create and render new card
+  const card = new Card(newPlaceObject, ".card-template");
+  places.prepend(card.createCard());
 
   closeModal(placeModal);
 }
