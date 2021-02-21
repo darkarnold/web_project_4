@@ -1,12 +1,14 @@
 import FormValidator from "./FormValidation.js";
 import initialCards from "./cardData.js";
 import Card from "./Card.js";
+import Section from "./Section.js";
 import {
   pageContainer,
   displayImageModal,
   openModal,
   closeModal,
 } from "./utils.js";
+import PopupWithImage from "./PopupWithImage.js";
 
 const settings = {
   formSelector: ".popup__form",
@@ -113,14 +115,31 @@ closeDisplayImageModal.addEventListener("click", () => {
 // Saving edit profile popup form content
 editProfilePopupForm.addEventListener("submit", formSubmitHandler);
 
-const places = pageContainer.querySelector(".places__grid");
-//iterate over array of cards
-initialCards.forEach((data) => {
-  const card = new Card(data, ".card-template");
+const places = ".places__grid";
 
-  //render cards
-  places.append(card.createCard());
-});
+const imagePopup = new PopupWithImage(".popup_type_display-image");
+imagePopup.setEventListeners();
+
+/* create the cards and iterate over array of cards 
+and render the cards on the page */
+
+const cards = new Section(
+  {
+    items: initialCards,
+    renderer: (item) => {
+      const card = new Card(item, ".card-template", () => {
+        imagePopup.open(item.name, item.link);
+      });
+
+      const cardElement = card.createCard();
+
+      cards.addItem(cardElement);
+    },
+  },
+  places
+);
+
+cards.renderElements();
 
 // add new place -image function
 function addPlaceSubmitHandler(evt) {

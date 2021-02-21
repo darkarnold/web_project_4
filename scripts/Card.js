@@ -1,16 +1,10 @@
-import {
-  popupImage,
-  popupImageTitle,
-  openModal,
-  displayImageModal,
-} from "./utils.js";
-
 class Card {
-  constructor(data, cardTemplateSelector) {
-    this._name = data.name;
-    this._link = data.link;
-    this._alt = data.alt;
+  constructor({ name, link, alt }, cardTemplateSelector, handleCardClick) {
+    this._name = name;
+    this._link = link;
+    this._alt = alt;
     this._cardTemplateSelector = cardTemplateSelector;
+    this._handleCardClick = handleCardClick;
   }
 
   _getTemplate() {
@@ -41,13 +35,6 @@ class Card {
     evt.target.classList.toggle("place__like-icon_active");
   }
 
-  _displayImagePreview() {
-    popupImage.src = this._link;
-    popupImageTitle.textContent = this._name;
-
-    openModal(displayImageModal);
-  }
-
   _deleteCard() {
     this._cardElement.remove();
     this._cardElement = null;
@@ -61,9 +48,7 @@ class Card {
     const placeImage = this._cardElement.querySelector(".place__image");
 
     // Display popup image by clicking on the image
-    placeImage.addEventListener("click", () => {
-      this._displayImagePreview();
-    });
+    placeImage.addEventListener("click", () => this._handleCardClick());
 
     placeLikeIcon.addEventListener("click", this._toggleLikeIconState);
 
