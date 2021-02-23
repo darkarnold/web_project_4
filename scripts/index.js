@@ -2,13 +2,9 @@ import FormValidator from "./FormValidation.js";
 import initialCards from "./cardData.js";
 import Card from "./Card.js";
 import Section from "./Section.js";
-import {
-  pageContainer,
-  displayImageModal,
-  openModal,
-  closeModal,
-} from "./utils.js";
+import { pageContainer, openModal, closeModal } from "./utils.js";
 import PopupWithImage from "./PopupWithImage.js";
+import PopupWithForm from "./PopupWithForm.js";
 
 const settings = {
   formSelector: ".popup__form",
@@ -29,21 +25,16 @@ const addPlaceButton = profile.querySelector(".button_value_add");
 
 //popup section
 const editPopupModal = pageContainer.querySelector(".popup_type_edit-profile");
-const placeModal = pageContainer.querySelector(".popup_type_add-place");
 
 const editProfilePopupForm = pageContainer.querySelector(
   ".popup__form_type_edit-profile"
 );
-const addPlacePopupForm = pageContainer.querySelector(
+const addPlacePopupFormSelector = pageContainer.querySelector(
   ".popup__form_type_add-place"
 );
 
 // close modal buttons
 const editCloseButton = editPopupModal.querySelector(".button_value_close");
-const closePlaceModal = placeModal.querySelector(".button_value_close");
-const closeDisplayImageModal = displayImageModal.querySelector(
-  ".button_value_close"
-);
 
 // select the input fields
 const nameFormInput = editProfilePopupForm.querySelector(
@@ -52,10 +43,8 @@ const nameFormInput = editProfilePopupForm.querySelector(
 const jobFormInput = editProfilePopupForm.querySelector(
   ".popup__input_val_job"
 );
-const titleFormInput = addPlacePopupForm.querySelector(
-  ".popup__input_val_title"
-);
-const linkFormInput = addPlacePopupForm.querySelector(".popup__input_val_link");
+const titleFormInput = pageContainer.querySelector(".popup__input_val_title");
+const linkFormInput = pageContainer.querySelector(".popup__input_val_link");
 
 // select the profile section fields
 const profileName = profileInfo.querySelector(".profile__info-name");
@@ -84,11 +73,6 @@ function formSubmitHandler(evt) {
   closeModal(editPopupModal);
 }
 
-//open add place modal
-addPlaceButton.addEventListener("click", () => {
-  openModal(placeModal);
-});
-
 // Open the edit-profile modal
 editButton.addEventListener("click", () => {
   openModal(editPopupModal);
@@ -97,26 +81,19 @@ editButton.addEventListener("click", () => {
   jobFormInput.value = profileTitle.textContent;
 });
 
-// close the add-place modal
-closePlaceModal.addEventListener("click", () => {
-  closeModal(placeModal);
-});
-
 // Close the popup modal
 editCloseButton.addEventListener("click", () => {
   closeModal(editPopupModal);
 });
 
-// close display image modal
-closeDisplayImageModal.addEventListener("click", () => {
-  closeModal(displayImageModal);
-});
-
 // Saving edit profile popup form content
 editProfilePopupForm.addEventListener("submit", formSubmitHandler);
 
+// class for image container
 const places = ".places__grid";
 
+const placeSelector = document.querySelector(places);
+// Display image popup
 const imagePopup = new PopupWithImage(".popup_type_display-image");
 imagePopup.setEventListeners();
 
@@ -141,10 +118,8 @@ const cards = new Section(
 
 cards.renderElements();
 
-// add new place -image function
-function addPlaceSubmitHandler(evt) {
-  evt.preventDefault();
-
+// create and render new card and prepend to initial cards
+function preRenderCard() {
   const newPlaceTitle = titleFormInput.value;
   const newPlaceURL = linkFormInput.value;
 
@@ -155,17 +130,34 @@ function addPlaceSubmitHandler(evt) {
   };
 
   // create and render new card
-  const card = new Card(newPlaceObject, ".card-template");
-  places.prepend(card.createCard());
+  const card = new Card(newPlaceObject, ".card-template", () => {
+    imagePopup.open(newPlaceObject.name, newPlaceObject.link);
+  });
+  const cardElement = card.createCard();
 
-  closeModal(placeModal);
+  placeSelector.prepend(cardElement);
 }
 
-addPlacePopupForm.addEventListener("submit", addPlaceSubmitHandler);
+// create Add-place popup form
+const addPlacePopupForm = new PopupWithForm(".popup_type_add-place", () => {
+  preRenderCard();
+
+  addPlacePopupForm.close();
+});
+
+addPlacePopupForm.setEventListeners();
+
+//open Add-place modal
+addPlaceButton.addEventListener("click", () => {
+  addPlacePopupForm.open();
+});
 
 // form Validation
 const editProfileValidator = new FormValidator(settings, editProfilePopupForm);
-const addPlaceValidator = new FormValidator(settings, addPlacePopupForm);
+const addPlaceValidator = new FormValidator(
+  settings,
+  addPlacePopupFormSelector
+);
 
 editProfileValidator.enableValidation();
 addPlaceValidator.enableValidation();
