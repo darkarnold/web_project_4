@@ -4,7 +4,18 @@ class UserInfo {
     this._jobSelector = document.querySelector(jobSelector);
   }
 
-  getUserInfo() {}
+  getUserInfo() {
+    this._userData = {
+      name: this._nameSelector.textContent,
+      job: this._jobSelector.textContent,
+    };
+    return this._userData;
+  }
 
-  setUserInfo() {}
+  setUserInfo(nameSelector, jobSelector) {
+    this._nameSelector.textContent = nameSelector;
+    this._jobSelector.textContent = jobSelector;
+  }
 }
+
+export default UserInfo;

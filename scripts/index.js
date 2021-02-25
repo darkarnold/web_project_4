@@ -2,9 +2,10 @@ import FormValidator from "./FormValidation.js";
 import initialCards from "./cardData.js";
 import Card from "./Card.js";
 import Section from "./Section.js";
-import { pageContainer, openModal, closeModal } from "./utils.js";
+import { pageContainer, closeModal } from "./utils.js";
 import PopupWithImage from "./PopupWithImage.js";
 import PopupWithForm from "./PopupWithForm.js";
+import UserInfo from "./UserInfo.js";
 
 const settings = {
   formSelector: ".popup__form",
@@ -60,34 +61,6 @@ popupModals.forEach((popup) => {
     }
   });
 });
-
-//  edit profile submit  function
-function formSubmitHandler(evt) {
-  evt.preventDefault();
-
-  // change content of the profile section
-  profileName.textContent = nameFormInput.value;
-  profileTitle.textContent = jobFormInput.value;
-
-  // call to close the modal
-  closeModal(editPopupModal);
-}
-
-// Open the edit-profile modal
-editButton.addEventListener("click", () => {
-  openModal(editPopupModal);
-  // Read content of the profile section and store it as the value for the form
-  nameFormInput.value = profileName.textContent;
-  jobFormInput.value = profileTitle.textContent;
-});
-
-// Close the popup modal
-editCloseButton.addEventListener("click", () => {
-  closeModal(editPopupModal);
-});
-
-// Saving edit profile popup form content
-editProfilePopupForm.addEventListener("submit", formSubmitHandler);
 
 // class for image container
 const places = ".places__grid";
@@ -150,6 +123,28 @@ addPlacePopupForm.setEventListeners();
 //open Add-place modal
 addPlaceButton.addEventListener("click", () => {
   addPlacePopupForm.open();
+});
+
+// Edit profile section
+const profileData = new UserInfo({
+  nameSelector: ".profile__info-name",
+  jobSelector: ".profile__info-subtitle",
+});
+
+const editPopupForm = new PopupWithForm(".popup_type_edit-profile", () => {
+  profileData.setUserInfo(nameFormInput.value, jobFormInput.value);
+
+  editPopupForm.close();
+});
+
+editPopupForm.setEventListeners();
+
+editButton.addEventListener("click", () => {
+  editPopupForm.open();
+  const { name, job } = profileData.getUserInfo();
+  nameFormInput.value = name;
+  jobFormInput.value = job;
+  //console.log(name, job);
 });
 
 // form Validation
