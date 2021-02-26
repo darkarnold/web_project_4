@@ -21,6 +21,8 @@ A user can change the descriptions of the profile user and add a name and image 
 - Responsive design
 - JavaScript
 - VS Code
+- ES6 Javascript
+- Webpack
 
 ## Figma
 
