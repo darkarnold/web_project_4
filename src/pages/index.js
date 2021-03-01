@@ -12,7 +12,6 @@ import {
   jobFormInput,
   titleFormInput,
   linkFormInput,
-  placeSelector,
   places,
   editProfilePopupForm,
   addPlacePopupFormSelector,
@@ -27,17 +26,21 @@ imagePopup.setEventListeners();
 /* create the cards and iterate over array of cards 
 and render the cards on the page */
 
+function renderCard(data) {
+  // create and render new card
+  const card = new Card(data, ".card-template", () => {
+    imagePopup.open(data.name, data.link);
+  });
+  const cardElement = card.createCard();
+
+  cards.addItem(cardElement);
+}
+
 const cards = new Section(
   {
     items: initialCards,
     renderer: (item) => {
-      const card = new Card(item, ".card-template", () => {
-        imagePopup.open(item.name, item.link);
-      });
-
-      const cardElement = card.createCard();
-
-      cards.addItem(cardElement);
+      renderCard(item);
     },
   },
   places
@@ -47,7 +50,7 @@ const cards = new Section(
 cards.renderElements();
 
 // create and render new card and prepend to initial cards
-function preRenderCard() {
+function addNewCards() {
   const newPlaceTitle = titleFormInput.value;
   const newPlaceURL = linkFormInput.value;
 
@@ -57,18 +60,12 @@ function preRenderCard() {
     link: newPlaceURL,
   };
 
-  // create and render new card
-  const card = new Card(newPlaceObject, ".card-template", () => {
-    imagePopup.open(newPlaceObject.name, newPlaceObject.link);
-  });
-  const cardElement = card.createCard();
-
-  placeSelector.prepend(cardElement);
+  renderCard(newPlaceObject);
 }
 
 // create Add-place popup form
 const addPlacePopupForm = new PopupWithForm(".popup_type_add-place", () => {
-  preRenderCard();
+  addNewCards();
 
   addPlacePopupForm.close();
 });

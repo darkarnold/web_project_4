@@ -42,21 +42,6 @@ const places = ".places__grid";
 
 const placeSelector = document.querySelector(places);
 
-const popupModals = Array.from(pageContainer.querySelectorAll(".popup"));
-
-popupModals.forEach((popup) => {
-  // close popup by clicking the overlay
-  document.addEventListener("click", (evt) => {
-    if (evt.target.classList.contains("popup")) {
-      closeModal(popup);
-    }
-  });
-});
-
-function closeModal(modal) {
-  modal.classList.remove("popup_opened");
-}
-
 // Card rendering
 
 const initialCards = [
@@ -100,7 +85,6 @@ const initialCards = [
 
 export {
   pageContainer,
-  closeModal,
   editButton,
   addPlaceButton,
   nameFormInput,
