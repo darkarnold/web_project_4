@@ -4,6 +4,9 @@ class Popup {
     // search for popup
     this._handleEscClose = this._handleEscClose.bind(this);
     // bind the method to the instance of the class
+    this._closeButton = this._popup.querySelector(".button_value_close");
+
+    this._popupModals = Array.from(document.querySelectorAll(".popup"));
   }
 
   open() {
@@ -25,10 +28,16 @@ class Popup {
   }
 
   setEventListeners() {
-    const closeButton = this._popup.querySelector(".button_value_close");
-
-    closeButton.addEventListener("click", () => {
+    this._closeButton.addEventListener("click", () => {
       this.close();
+    });
+
+    this._popupModals.forEach((popup) => {
+      document.addEventListener("click", (evt) => {
+        if (evt.target.classList.contains("popup")) {
+          this.close(popup);
+        }
+      });
     });
   }
 }
