@@ -5,6 +5,7 @@ import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
+import api from "../utils/Api.js";
 import {
   editButton,
   addPlaceButton,
@@ -25,29 +26,6 @@ imagePopup.setEventListeners();
 
 /* create the cards and iterate over array of cards 
 and render the cards on the page */
-
-function renderCard(data) {
-  // create and render new card
-  const card = new Card(data, ".card-template", () => {
-    imagePopup.open(data.name, data.link);
-  });
-  const cardElement = card.createCard();
-
-  cards.addItem(cardElement);
-}
-
-const cards = new Section(
-  {
-    items: initialCards,
-    renderer: (item) => {
-      renderCard(item);
-    },
-  },
-  places
-);
-
-// render cards on the page
-cards.renderElements();
 
 // create and render new card and prepend to initial cards
 function addNewCards() {
@@ -83,8 +61,42 @@ const profileData = new UserInfo({
   jobSelector: ".profile__info-subtitle",
 });
 
+api.getUserData().then((res) => {
+  //console.log("res", res);
+  profileData.setUserInfo(res.name, res.about);
+});
+
+api.getInitialCards().then((cardInfo) => {
+  //console.log("res", cardInfo);
+  function renderCard(data) {
+    // create and render new card
+    const card = new Card(data, ".card-template", () => {
+      imagePopup.open(data.name, data.link);
+    });
+    const cardElement = card.createCard();
+
+    cards.addItem(cardElement);
+  }
+
+  const cards = new Section(
+    {
+      items: cardInfo,
+      renderer: (item) => {
+        renderCard(item);
+      },
+    },
+    places
+  );
+
+  // render cards on the page
+  cards.renderElements();
+});
+
 const editPopupForm = new PopupWithForm(".popup_type_edit-profile", () => {
-  profileData.setUserInfo(nameFormInput.value, jobFormInput.value);
+  api.editProfile(nameFormInput.value, jobFormInput.value).then((res) => {
+    //console.log("res", res);
+    profileData.setUserInfo(res.name, res.about);
+  });
 
   editPopupForm.close();
 });
