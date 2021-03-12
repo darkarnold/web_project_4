@@ -1,10 +1,17 @@
 class Card {
-  constructor({ name, link, alt }, cardTemplateSelector, handleCardClick) {
+  constructor(
+    { name, link, likes, owner, alt },
+    cardTemplateSelector,
+    handleCardClick
+  ) {
     this._name = name;
     this._link = link;
     this._alt = alt;
+    this._likes = likes;
+    this._owner = owner;
     this._cardTemplateSelector = cardTemplateSelector;
     this._handleCardClick = handleCardClick;
+    this.count = 1;
   }
 
   _getTemplate() {
@@ -35,6 +42,13 @@ class Card {
     evt.target.classList.toggle("place__like-icon_active");
   }
 
+  showLikes(count) {
+    this.count += 1;
+    this._cardElement.querySelector(
+      ".place__like-icon_count"
+    ).textContent = count;
+  }
+
   _deleteCard() {
     this._cardElement.remove();
     this._cardElement = null;
@@ -50,7 +64,10 @@ class Card {
     // Display popup image by clicking on the image
     placeImage.addEventListener("click", () => this._handleCardClick());
 
-    placeLikeIcon.addEventListener("click", this._toggleLikeIconState);
+    placeLikeIcon.addEventListener("click", () => {
+      this._toggleLikeIconState;
+      this.showLikes(this.count);
+    });
 
     // remove card
     placeDeleteIcon.addEventListener("click", () => {

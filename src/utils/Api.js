@@ -44,6 +44,20 @@ class Api {
       .then(responseHandler)
       .catch(errorHandler);
   }
+
+  // add new card to server
+  setnewCard(name, link) {
+    return fetch(`${this._baseUrl}/cards`, {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({
+        name,
+        link,
+      }),
+    })
+      .then(responseHandler)
+      .catch(errorHandler);
+  }
 }
 
 const api = new Api({

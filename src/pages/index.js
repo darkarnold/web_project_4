@@ -28,32 +28,6 @@ imagePopup.setEventListeners();
 and render the cards on the page */
 
 // create and render new card and prepend to initial cards
-function addNewCards() {
-  const newPlaceTitle = titleFormInput.value;
-  const newPlaceURL = linkFormInput.value;
-
-  // New place card object
-  const newPlaceObject = {
-    name: newPlaceTitle,
-    link: newPlaceURL,
-  };
-
-  renderCard(newPlaceObject);
-}
-
-// create Add-place popup form
-const addPlacePopupForm = new PopupWithForm(".popup_type_add-place", () => {
-  addNewCards();
-
-  addPlacePopupForm.close();
-});
-
-addPlacePopupForm.setEventListeners();
-
-//open Add-place modal
-addPlaceButton.addEventListener("click", () => {
-  addPlacePopupForm.open();
-});
 
 // Edit profile section
 const profileData = new UserInfo({
@@ -61,13 +35,15 @@ const profileData = new UserInfo({
   jobSelector: ".profile__info-subtitle",
 });
 
+// retrieve user data
 api.getUserData().then((res) => {
   //console.log("res", res);
   profileData.setUserInfo(res.name, res.about);
 });
 
+// retrieve user cards
 api.getInitialCards().then((cardInfo) => {
-  //console.log("res", cardInfo);
+  console.log("res", cardInfo);
   function renderCard(data) {
     // create and render new card
     const card = new Card(data, ".card-template", () => {
@@ -90,9 +66,43 @@ api.getInitialCards().then((cardInfo) => {
 
   // render cards on the page
   cards.renderElements();
+
+  function addNewCards() {
+    const newPlaceTitle = titleFormInput.value;
+    const newPlaceURL = linkFormInput.value;
+
+    // New place card object
+    const newPlaceObject = {
+      name: newPlaceTitle,
+      link: newPlaceURL,
+    };
+
+    // Add new card to the server
+    api
+      .setnewCard(newPlaceObject.name, newPlaceObject.link)
+      .then((newCardData) => {
+        //console.log("newCardData", newCardData);
+        renderCard(newCardData);
+      });
+  }
+
+  // create Add-place popup form
+  const addPlacePopupForm = new PopupWithForm(".popup_type_add-place", () => {
+    addNewCards();
+
+    addPlacePopupForm.close();
+  });
+
+  addPlacePopupForm.setEventListeners();
+
+  //open Add-place modal
+  addPlaceButton.addEventListener("click", () => {
+    addPlacePopupForm.open();
+  });
 });
 
 const editPopupForm = new PopupWithForm(".popup_type_edit-profile", () => {
+  // update user information
   api.editProfile(nameFormInput.value, jobFormInput.value).then((res) => {
     //console.log("res", res);
     profileData.setUserInfo(res.name, res.about);
