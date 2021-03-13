@@ -42,6 +42,8 @@ const places = ".places__grid";
 
 const placeSelector = document.querySelector(places);
 
+const deleteCardButton = pageContainer.querySelectorAll(".place__delete-icon");
+
 // Card rendering
 
 const initialCards = [
@@ -96,5 +98,5 @@ export {
   editProfilePopupForm,
   addPlacePopupFormSelector,
   settings,
-  initialCards,
+  deleteCardButton,
 };

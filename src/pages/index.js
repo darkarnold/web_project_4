@@ -17,7 +17,7 @@ import {
   editProfilePopupForm,
   addPlacePopupFormSelector,
   settings,
-  initialCards,
+  deleteCardButton,
 } from "../utils/utils.js";
 
 // Display image popup
@@ -119,6 +119,20 @@ editButton.addEventListener("click", () => {
   nameFormInput.value = name;
   jobFormInput.value = job;
 });
+
+// Delete confirmation popup
+const confirmDeletePopup = new PopupWithForm(
+  ".popup_type_confirm-popup",
+  () => {
+    confirmDeletePopup.close();
+  }
+);
+
+confirmDeletePopup.setEventListeners();
+//confirmDeletePopup.open();
+/*deleteCardButton.addEventListener("click", () => {
+  
+});*/
 
 // form Validation
 const editProfileValidator = new FormValidator(settings, editProfilePopupForm);
