@@ -14,10 +14,11 @@ class UserInfo {
     return this._userData;
   }
 
-  setUserInfo(nameSelector, jobSelector, id) {
+  setUserInfo(nameSelector, jobSelector, avatarSelector, id) {
     this._id = id;
     this._nameSelector.textContent = nameSelector;
     this._jobSelector.textContent = jobSelector;
+    this._avatar.style.backgroundImage = `url('${avatarSelector}')`;
   }
 
   setAvatar(avatarSelector) {

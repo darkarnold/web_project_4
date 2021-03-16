@@ -19,7 +19,6 @@ import {
   settings,
   deleteCardButton,
   changeProfileAvatarForm,
-  profilePicture,
   updateAvatarButton,
   imageUrl,
 } from "../utils/utils.js";
@@ -49,15 +48,6 @@ api.getUserData().then((res) => {
 // retrieve user cards
 api.getInitialCards().then((cardInfo) => {
   console.log("res", cardInfo);
-  function renderCard(data) {
-    // create and render new card
-    const card = new Card(data, ".card-template", () => {
-      imagePopup.open(data.name, data.link);
-    });
-    const cardElement = card.createCard();
-
-    cards.addItem(cardElement);
-  }
 
   const cards = new Section(
     {
@@ -68,6 +58,36 @@ api.getInitialCards().then((cardInfo) => {
     },
     places
   );
+
+  function renderCard(data) {
+    // create and render new card
+    const card = new Card(
+      {
+        name: data.name,
+        link: data.link,
+        handleCardClick: () => {
+          imagePopup.open(data.name, data.link);
+        },
+        handleDeleteCardClick: () => {
+          // Delete confirmation popup
+          const confirmDeletePopup = new PopupWithForm(
+            ".popup_type_confirm-popup",
+            () => {
+              confirmDeletePopup.close();
+            }
+          );
+          confirmDeletePopup.open();
+
+          confirmDeletePopup.setEventListeners();
+        },
+      },
+      ".card-template"
+    );
+
+    const cardElement = card.createCard();
+
+    cards.addItem(cardElement);
+  }
 
   // render cards on the page
   cards.renderElements();
@@ -110,7 +130,7 @@ const editPopupForm = new PopupWithForm(".popup_type_edit-profile", () => {
   // update user information
   api.editProfile(nameFormInput.value, jobFormInput.value).then((res) => {
     //console.log("res", res);
-    profileData.setUserInfo(res.name, res.about, res.avatar);
+    profileData.setUserInfo(res.name, res.about);
   });
 
   editPopupForm.close();
@@ -125,19 +145,7 @@ editButton.addEventListener("click", () => {
   jobFormInput.value = job;
 });
 
-// Delete confirmation popup
-const confirmDeletePopup = new PopupWithForm(
-  ".popup_type_confirm-popup",
-  () => {
-    confirmDeletePopup.close();
-  }
-);
-
-confirmDeletePopup.setEventListeners();
 //confirmDeletePopup.open();
-/*deleteCardButton.addEventListener("click", () => {
-  
-});*/
 
 // change profile picture popup
 const changeProfileAvatar = new PopupWithForm(
@@ -171,3 +179,20 @@ const changeProfileAvatarValidator = new FormValidator(
 editProfileValidator.enableValidation();
 addPlaceValidator.enableValidation();
 changeProfileAvatarValidator.enableValidation();
+
+/** // Handle the deleting of cards from page
+      const handleDeleteCardClick = () => {
+        // Delete confirmation popup
+        const confirmDeletePopup = new PopupWithForm(
+          ".popup_type_confirm-popup",
+          () => {
+            confirmDeletePopup.open();
+          }
+        );
+        confirmDeletePopup.close();
+
+        confirmDeletePopup.setEventListeners();
+      };
+      deleteCardButton.addEventListener("click", () => {
+        handleDeleteCardClick();
+      }); */

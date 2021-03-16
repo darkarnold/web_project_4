@@ -14,7 +14,6 @@ const settings = {
 // profile section
 const profile = pageContainer.querySelector(".profile");
 const profileInfo = profile.querySelector(".profile__info");
-const profilePicture = profile.querySelector(".profile__avatar");
 
 //popup form section
 const editProfilePopupForm = pageContainer.querySelector(
@@ -104,7 +103,6 @@ export {
   settings,
   deleteCardButton,
   changeProfileAvatarForm,
-  profilePicture,
   updateAvatarButton,
   imageUrl,
 };
