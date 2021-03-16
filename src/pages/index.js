@@ -18,6 +18,10 @@ import {
   addPlacePopupFormSelector,
   settings,
   deleteCardButton,
+  changeProfileAvatarForm,
+  profilePicture,
+  updateAvatarButton,
+  imageUrl,
 } from "../utils/utils.js";
 
 // Display image popup
@@ -33,12 +37,13 @@ and render the cards on the page */
 const profileData = new UserInfo({
   nameSelector: ".profile__info-name",
   jobSelector: ".profile__info-subtitle",
+  avatarSelector: ".profile__avatar",
 });
 
 // retrieve user data
 api.getUserData().then((res) => {
-  //console.log("res", res);
-  profileData.setUserInfo(res.name, res.about);
+  console.log("res", res);
+  profileData.setUserInfo(res.name, res.about, res.avatar, res._id);
 });
 
 // retrieve user cards
@@ -105,7 +110,7 @@ const editPopupForm = new PopupWithForm(".popup_type_edit-profile", () => {
   // update user information
   api.editProfile(nameFormInput.value, jobFormInput.value).then((res) => {
     //console.log("res", res);
-    profileData.setUserInfo(res.name, res.about);
+    profileData.setUserInfo(res.name, res.about, res.avatar);
   });
 
   editPopupForm.close();
@@ -134,12 +139,35 @@ confirmDeletePopup.setEventListeners();
   
 });*/
 
+// change profile picture popup
+const changeProfileAvatar = new PopupWithForm(
+  ".popup_type_change-profile-picture",
+  () => {
+    api.updateAvatar(imageUrl.value).then((res) => {
+      profileData.setAvatar(res.avatar);
+      //console.log("res", res);
+      //profilePicture.style.backgroundImage = res.avatar;
+    });
+    changeProfileAvatar.close();
+  }
+);
+
+updateAvatarButton.addEventListener("click", () => {
+  changeProfileAvatar.open();
+});
+
+changeProfileAvatar.setEventListeners();
 // form Validation
 const editProfileValidator = new FormValidator(settings, editProfilePopupForm);
 const addPlaceValidator = new FormValidator(
   settings,
   addPlacePopupFormSelector
 );
+const changeProfileAvatarValidator = new FormValidator(
+  settings,
+  changeProfileAvatarForm
+);
 
 editProfileValidator.enableValidation();
 addPlaceValidator.enableValidation();
+changeProfileAvatarValidator.enableValidation();

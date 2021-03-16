@@ -1,10 +1,10 @@
-const errorHandler = (err) => console.log(`Error: ${err}`);
+const errorHandler = (err) => console.log(`${err}`);
 const responseHandler = (res) => {
   if (res.ok) {
     return res.json();
   }
 
-  return Promise.reject(`Error: ${res.status}`);
+  return Promise.reject(`Error: ${res.statusText}`);
 };
 
 class Api {
@@ -54,6 +54,18 @@ class Api {
         name,
         link,
       }),
+    })
+      .then(responseHandler)
+      .catch(errorHandler);
+  }
+
+  //update profile picture
+  //PATCH https://around.nomoreparties.co/v1/groupId/users/me/avatar
+  updateAvatar(avatar) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: this._headers,
+      body: JSON.stringify({ avatar }),
     })
       .then(responseHandler)
       .catch(errorHandler);
