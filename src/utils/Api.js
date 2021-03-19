@@ -70,6 +70,22 @@ class Api {
       .then(responseHandler)
       .catch(errorHandler);
   }
+
+  // resolve server requests and render when requests are complete
+  getAppInfo() {
+    return Promise.all([this.getUserData(), this.getInitialCards()]);
+  }
+
+  /*Delete card from server
+  DELETE https://around.nomoreparties.co/v1/groupId/cards/cardId*/
+  deleteCard(cardId) {
+    return fetch(this._baseUrl + "/cards/" + cardId, {
+      method: "DELETE",
+      headers: this._headers,
+    })
+      .then(responseHandler)
+      .catch(errorHandler);
+  }
 }
 
 const api = new Api({

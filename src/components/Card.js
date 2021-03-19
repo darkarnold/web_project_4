@@ -1,13 +1,15 @@
 class Card {
   constructor(
-    { name, link, likes, owner, handleCardClick, handleDeleteCardClick },
-    cardTemplateSelector
+    { name, link, likes, owner, _id, handleCardClick, handleDeleteCardClick },
+    cardTemplateSelector,
+    userId
   ) {
     this._name = name;
     this._link = link;
-    //this._alt = alt;
+    this._userId = userId;
     this._likes = likes;
     this._owner = owner;
+    this._id = _id;
     this._cardTemplateSelector = cardTemplateSelector;
     this._handleCardClick = handleCardClick;
     this._handleDeleteCardClick = handleDeleteCardClick;
@@ -34,6 +36,7 @@ class Card {
     this._placeName.textContent = this._name;
 
     this._setEventListeners();
+    this._displayDeleteIcon();
 
     return this._cardElement;
   }
@@ -50,8 +53,14 @@ class Card {
   }
 
   _deleteCard() {
-    this._cardElement.remove();
-    this._cardElement = null;
+    this._cardElement.remove(".place");
+    //this._cardElement = null;
+  }
+
+  _displayDeleteIcon() {
+    if (this._owner._id !== this._userId) {
+      this._placeDeleteIcon.style.display = "none";
+    }
   }
 
   _setEventListeners() {
@@ -69,9 +78,9 @@ class Card {
     });
 
     // remove card
-    this._placeDeleteIcon.addEventListener("click", () =>
-      this._handleDeleteCardClick()
-    );
+    this._placeDeleteIcon.addEventListener("click", () => {
+      this._handleDeleteCardClick(this._id);
+    });
   }
 }
 

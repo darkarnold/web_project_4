@@ -39,19 +39,13 @@ const profileData = new UserInfo({
   avatarSelector: ".profile__avatar",
 });
 
-// retrieve user data
-api.getUserData().then((res) => {
-  console.log("res", res);
-  profileData.setUserInfo(res.name, res.about, res.avatar, res._id);
-});
-
-// retrieve user cards
-api.getInitialCards().then((cardInfo) => {
-  console.log("res", cardInfo);
-
+//render user data and user cards after their requests are resolved
+api.getAppInfo().then(([userData, cardData]) => {
+  console.log("AppInfo", [cardData, userData]);
+  //console.log("cardid:", [cardData._id]);
   const cards = new Section(
     {
-      items: cardInfo,
+      items: cardData,
       renderer: (item) => {
         renderCard(item);
       },
@@ -59,29 +53,40 @@ api.getInitialCards().then((cardInfo) => {
     places
   );
 
+  // Delete confirmation popup
+  const confirmDeletePopup = new PopupWithForm(
+    ".popup_type_confirm-popup"
+    //here you have id and card passed, right? but from where?
+    //now lets go back to popupwith form
+  );
+  confirmDeletePopup.setEventListeners();
+
   function renderCard(data) {
     // create and render new card
+    //in your card.js ? yes? where should i modify? card.js
     const card = new Card(
       {
         name: data.name,
         link: data.link,
+        owner: { _id: data.owner._id },
+        _id: data._id,
         handleCardClick: () => {
           imagePopup.open(data.name, data.link);
         },
-        handleDeleteCardClick: () => {
-          // Delete confirmation popup
-          const confirmDeletePopup = new PopupWithForm(
-            ".popup_type_confirm-popup",
-            () => {
-              confirmDeletePopup.close();
-            }
-          );
+        handleDeleteCardClick: (_id) => {
           confirmDeletePopup.open();
 
-          confirmDeletePopup.setEventListeners();
+          confirmDeletePopup.handleSubmit(() => {
+            api.deleteCard(_id).then(() => {
+              console.log(_id);
+              card._deleteCard();
+              confirmDeletePopup.close();
+            });
+          });
         },
       },
-      ".card-template"
+      ".card-template",
+      userData._id
     );
 
     const cardElement = card.createCard();
@@ -124,8 +129,15 @@ api.getInitialCards().then((cardInfo) => {
   addPlaceButton.addEventListener("click", () => {
     addPlacePopupForm.open();
   });
-});
 
+  // retrieve user data
+  profileData.setUserInfo(
+    userData.name,
+    userData.about,
+    userData.avatar,
+    userData._id
+  );
+});
 const editPopupForm = new PopupWithForm(".popup_type_edit-profile", () => {
   // update user information
   api.editProfile(nameFormInput.value, jobFormInput.value).then((res) => {
@@ -145,16 +157,12 @@ editButton.addEventListener("click", () => {
   jobFormInput.value = job;
 });
 
-//confirmDeletePopup.open();
-
 // change profile picture popup
 const changeProfileAvatar = new PopupWithForm(
   ".popup_type_change-profile-picture",
   () => {
     api.updateAvatar(imageUrl.value).then((res) => {
       profileData.setAvatar(res.avatar);
-      //console.log("res", res);
-      //profilePicture.style.backgroundImage = res.avatar;
     });
     changeProfileAvatar.close();
   }
@@ -179,20 +187,3 @@ const changeProfileAvatarValidator = new FormValidator(
 editProfileValidator.enableValidation();
 addPlaceValidator.enableValidation();
 changeProfileAvatarValidator.enableValidation();
-
-/** // Handle the deleting of cards from page
-      const handleDeleteCardClick = () => {
-        // Delete confirmation popup
-        const confirmDeletePopup = new PopupWithForm(
-          ".popup_type_confirm-popup",
-          () => {
-            confirmDeletePopup.open();
-          }
-        );
-        confirmDeletePopup.close();
-
-        confirmDeletePopup.setEventListeners();
-      };
-      deleteCardButton.addEventListener("click", () => {
-        handleDeleteCardClick();
-      }); */
