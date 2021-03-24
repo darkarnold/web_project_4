@@ -17,7 +17,6 @@ import {
   editProfilePopupForm,
   addPlacePopupFormSelector,
   settings,
-  deleteCardButton,
   changeProfileAvatarForm,
   updateAvatarButton,
   imageUrl,
@@ -54,22 +53,19 @@ api.getAppInfo().then(([userData, cardData]) => {
   );
 
   // Delete confirmation popup
-  const confirmDeletePopup = new PopupWithForm(
-    ".popup_type_confirm-popup"
-    //here you have id and card passed, right? but from where?
-    //now lets go back to popupwith form
-  );
+  const confirmDeletePopup = new PopupWithForm(".popup_type_confirm-popup");
   confirmDeletePopup.setEventListeners();
 
   function renderCard(data) {
     // create and render new card
-    //in your card.js ? yes? where should i modify? card.js
+
     const card = new Card(
       {
         name: data.name,
         link: data.link,
         owner: { _id: data.owner._id },
         _id: data._id,
+        likes: data.likes,
         handleCardClick: () => {
           imagePopup.open(data.name, data.link);
         },
@@ -83,6 +79,22 @@ api.getAppInfo().then(([userData, cardData]) => {
               confirmDeletePopup.close();
             });
           });
+        },
+        handleLikedCardClick: (_id) => {
+          if (
+            card.placeLikeIcon.classList.contains("place__like-icon_active")
+          ) {
+            //console.log(card._likes);
+            api.deleteLikes(_id).then((res) => {
+              card.placeLikeIcon.classList.remove("place__like-icon_active");
+              card.showLikes(res.likes.length);
+            });
+          } else {
+            api.addLikes(_id).then((res) => {
+              card.placeLikeIcon.classList.add("place__like-icon_active");
+              card.showLikes(res.likes.length);
+            });
+          }
         },
       },
       ".card-template",
@@ -111,7 +123,6 @@ api.getAppInfo().then(([userData, cardData]) => {
     api
       .setnewCard(newPlaceObject.name, newPlaceObject.link)
       .then((newCardData) => {
-        //console.log("newCardData", newCardData);
         renderCard(newCardData);
       });
   }
@@ -141,7 +152,6 @@ api.getAppInfo().then(([userData, cardData]) => {
 const editPopupForm = new PopupWithForm(".popup_type_edit-profile", () => {
   // update user information
   api.editProfile(nameFormInput.value, jobFormInput.value).then((res) => {
-    //console.log("res", res);
     profileData.setUserInfo(res.name, res.about);
   });
 

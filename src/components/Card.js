@@ -1,6 +1,15 @@
 class Card {
   constructor(
-    { name, link, likes, owner, _id, handleCardClick, handleDeleteCardClick },
+    {
+      name,
+      link,
+      likes,
+      owner,
+      _id,
+      handleCardClick,
+      handleDeleteCardClick,
+      handleLikedCardClick,
+    },
     cardTemplateSelector,
     userId
   ) {
@@ -13,7 +22,10 @@ class Card {
     this._cardTemplateSelector = cardTemplateSelector;
     this._handleCardClick = handleCardClick;
     this._handleDeleteCardClick = handleDeleteCardClick;
-    this.count = 1;
+    this._handleLikedCardClick = handleLikedCardClick;
+    //this.count = 1;
+    this._cardElement = this._getTemplate();
+    this.placeLikeIcon = this._cardElement.querySelector(".place__like-icon");
   }
 
   _getTemplate() {
@@ -26,30 +38,39 @@ class Card {
   }
 
   createCard() {
-    this._cardElement = this._getTemplate();
+    //this._cardElement = this._getTemplate();
 
     this._placeImage = this._cardElement.querySelector(".place__image");
     this._placeName = this._cardElement.querySelector(".place__name");
 
     this._placeImage.src = this._link;
-    this._placeImage.alt = this._alt;
     this._placeName.textContent = this._name;
 
     this._setEventListeners();
+    this.isLiked();
+    this.showLikes(this._likes.length);
     this._displayDeleteIcon();
 
     return this._cardElement;
   }
 
-  _toggleLikeIconState(evt) {
+  /*_toggleLikeIconState(evt) {
     evt.target.classList.toggle("place__like-icon_active");
+  }*/
+
+  isLiked() {
+    if (this._likes.some((like) => like._id === this._userId)) {
+      this.placeLikeIcon.classList.add("place__like-icon_active");
+      //this.showLikes(this._likes.length);
+    }
   }
 
   showLikes(count) {
-    this.count += 1;
     this._cardElement.querySelector(
       ".place__like-icon_count"
     ).textContent = count;
+
+    //this.isLiked();
   }
 
   _deleteCard() {
@@ -64,7 +85,7 @@ class Card {
   }
 
   _setEventListeners() {
-    this._placeLikeIcon = this._cardElement.querySelector(".place__like-icon");
+    //this.placeLikeIcon = this._cardElement.querySelector(".place__like-icon");
     this._placeDeleteIcon = this._cardElement.querySelector(
       ".place__delete-icon"
     );
@@ -72,9 +93,9 @@ class Card {
     // Display popup image by clicking on the image
     this._placeImage.addEventListener("click", () => this._handleCardClick());
 
-    this._placeLikeIcon.addEventListener("click", () => {
-      this._toggleLikeIconState;
-      this.showLikes(this.count);
+    this.placeLikeIcon.addEventListener("click", () => {
+      this._handleLikedCardClick(this._id);
+      //this._toggleLikeIconState;
     });
 
     // remove card

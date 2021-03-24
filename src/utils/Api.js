@@ -86,6 +86,28 @@ class Api {
       .then(responseHandler)
       .catch(errorHandler);
   }
+
+  /* Add likes to card
+  PUT https://around.nomoreparties.co/v1/groupId/cards/likes/cardId */
+  addLikes(cardId) {
+    return fetch(this._baseUrl + "/cards/likes/" + cardId, {
+      method: "PUT",
+      headers: this._headers,
+    })
+      .then(responseHandler)
+      .catch(errorHandler);
+  }
+
+  /* Remove likes from card
+  DELETE https://around.nomoreparties.co/v1/groupId/cards/likes/cardId */
+  deleteLikes(cardId) {
+    return fetch(this._baseUrl + "/cards/likes/" + cardId, {
+      method: "DELETE",
+      headers: this._headers,
+    })
+      .then(responseHandler)
+      .catch(errorHandler);
+  }
 }
 
 const api = new Api({

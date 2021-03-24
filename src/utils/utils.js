@@ -30,7 +30,7 @@ const changeProfileAvatarForm = pageContainer.querySelector(
 // buttons
 const editButton = profileInfo.querySelector(".button_value_edit");
 const addPlaceButton = profile.querySelector(".button_value_add");
-const deleteCardButton = pageContainer.querySelectorAll(".place__delete-icon");
+
 const updateAvatarButton = pageContainer.querySelector(".overlay__icon");
 // select the input fields
 const nameFormInput = editProfilePopupForm.querySelector(
@@ -101,7 +101,6 @@ export {
   editProfilePopupForm,
   addPlacePopupFormSelector,
   settings,
-  deleteCardButton,
   changeProfileAvatarForm,
   updateAvatarButton,
   imageUrl,
