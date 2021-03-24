@@ -66,6 +66,14 @@ class Card {
     ).textContent = count;
   }
 
+  updateLikes() {
+    this.placeLikeIcon.classList.remove("place__like-icon_active");
+  }
+
+  likedCard() {
+    this.placeLikeIcon.classList.add("place__like-icon_active");
+  }
+
   deleteCard() {
     this._cardElement.remove(".place");
     this._cardElement = null;

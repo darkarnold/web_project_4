@@ -1,4 +1,3 @@
-const errorHandler = (err) => console.log(`${err}`);
 const responseHandler = (res) => {
   if (res.ok) {
     return res.json();
@@ -17,18 +16,14 @@ class Api {
   getUserData() {
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
-    })
-      .then(responseHandler)
-      .catch(errorHandler);
+    }).then(responseHandler);
   }
 
   // fetch cards from the server
   getInitialCards() {
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,
-    })
-      .then(responseHandler)
-      .catch(errorHandler);
+    }).then(responseHandler);
   }
 
   // edit and update the profile info
@@ -40,9 +35,7 @@ class Api {
         name,
         about,
       }),
-    })
-      .then(responseHandler)
-      .catch(errorHandler);
+    }).then(responseHandler);
   }
 
   // add new card to server
@@ -54,9 +47,7 @@ class Api {
         name,
         link,
       }),
-    })
-      .then(responseHandler)
-      .catch(errorHandler);
+    }).then(responseHandler);
   }
 
   //update profile picture
@@ -66,9 +57,7 @@ class Api {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({ avatar }),
-    })
-      .then(responseHandler)
-      .catch(errorHandler);
+    }).then(responseHandler);
   }
 
   // resolve server requests and render when requests are complete
@@ -82,9 +71,7 @@ class Api {
     return fetch(this._baseUrl + "/cards/" + cardId, {
       method: "DELETE",
       headers: this._headers,
-    })
-      .then(responseHandler)
-      .catch(errorHandler);
+    }).then(responseHandler);
   }
 
   /* Add likes to card
@@ -93,9 +80,7 @@ class Api {
     return fetch(this._baseUrl + "/cards/likes/" + cardId, {
       method: "PUT",
       headers: this._headers,
-    })
-      .then(responseHandler)
-      .catch(errorHandler);
+    }).then(responseHandler);
   }
 
   /* Remove likes from card
@@ -104,9 +89,7 @@ class Api {
     return fetch(this._baseUrl + "/cards/likes/" + cardId, {
       method: "DELETE",
       headers: this._headers,
-    })
-      .then(responseHandler)
-      .catch(errorHandler);
+    }).then(responseHandler);
   }
 }
 

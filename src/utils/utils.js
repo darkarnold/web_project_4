@@ -39,9 +39,6 @@ const nameFormInput = editProfilePopupForm.querySelector(
 const jobFormInput = editProfilePopupForm.querySelector(
   ".popup__input_val_job"
 );
-const titleFormInput = pageContainer.querySelector(".popup__input_val_title");
-const linkFormInput = pageContainer.querySelector(".popup__input_val_link");
-const imageUrl = pageContainer.querySelector(".popup__input_val_url");
 // class for image container
 const places = ".places__grid";
 
@@ -93,8 +90,6 @@ export {
   editButton,
   addPlaceButton,
   nameFormInput,
-  titleFormInput,
-  linkFormInput,
   jobFormInput,
   placeSelector,
   places,
@@ -103,5 +98,4 @@ export {
   settings,
   changeProfileAvatarForm,
   updateAvatarButton,
-  imageUrl,
 };

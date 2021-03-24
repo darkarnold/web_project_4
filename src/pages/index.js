@@ -11,15 +11,12 @@ import {
   addPlaceButton,
   nameFormInput,
   jobFormInput,
-  titleFormInput,
-  linkFormInput,
   places,
   editProfilePopupForm,
   addPlacePopupFormSelector,
   settings,
   changeProfileAvatarForm,
   updateAvatarButton,
-  imageUrl,
 } from "../utils/utils.js";
 
 // Display image popup
@@ -50,124 +47,158 @@ const profileData = new UserInfo({
 });
 
 //render user data and user cards after their requests are resolved
-api.getAppInfo().then(([userData, cardData]) => {
-  const cards = new Section(
-    {
-      items: cardData,
-      renderer: (item) => {
-        renderCard(item);
-      },
-    },
-    places
-  );
-
-  // Delete confirmation popup
-  const confirmDeletePopup = new PopupWithForm(".popup_type_confirm-popup");
-  confirmDeletePopup.setEventListeners();
-
-  function renderCard(data) {
-    // create and render new card
-
-    const card = new Card(
+api
+  .getAppInfo()
+  .then(([userData, cardData]) => {
+    const cards = new Section(
       {
-        name: data.name,
-        link: data.link,
-        owner: { _id: data.owner._id },
-        _id: data._id,
-        likes: data.likes,
-        handleCardClick: () => {
-          imagePopup.open(data.name, data.link);
-        },
-        handleDeleteCardClick: (_id) => {
-          confirmDeletePopup.open();
-
-          confirmDeletePopup.handleSubmit(() => {
-            api.deleteCard(_id).then(() => {
-              console.log(_id);
-              card.deleteCard();
-              confirmDeletePopup.close();
-            });
-          });
-        },
-        handleLikedCardClick: (_id) => {
-          if (
-            card.placeLikeIcon.classList.contains("place__like-icon_active")
-          ) {
-            //console.log(card._likes);
-            api.deleteLikes(_id).then((res) => {
-              card.placeLikeIcon.classList.remove("place__like-icon_active");
-              card.showLikes(res.likes.length);
-            });
-          } else {
-            api.addLikes(_id).then((res) => {
-              card.placeLikeIcon.classList.add("place__like-icon_active");
-              card.showLikes(res.likes.length);
-            });
-          }
+        items: cardData,
+        renderer: (item) => {
+          renderCard(item);
         },
       },
-      ".card-template",
-      userData._id
+      places
     );
 
-    const cardElement = card.createCard();
+    // Delete confirmation popup
+    const confirmDeletePopup = new PopupWithForm(".popup_type_confirm-popup");
+    confirmDeletePopup.setEventListeners();
 
-    cards.addItem(cardElement);
-  }
+    function renderCard(data) {
+      // create and render new card
 
-  // render cards on the page
-  cards.renderElements();
+      const card = new Card(
+        {
+          name: data.name,
+          link: data.link,
+          owner: { _id: data.owner._id },
+          _id: data._id,
+          likes: data.likes,
+          handleCardClick: () => {
+            imagePopup.open(data.name, data.link);
+          },
+          handleDeleteCardClick: (_id) => {
+            confirmDeletePopup.open();
 
-  function addNewCards() {
-    const newPlaceTitle = titleFormInput.value;
-    const newPlaceURL = linkFormInput.value;
+            confirmDeletePopup.setNewSubmitHandler(() => {
+              api
+                .deleteCard(_id)
+                .then(() => {
+                  console.log(_id);
+                  card.deleteCard();
+                  confirmDeletePopup.close();
+                })
+                .catch((err) => {
+                  console.log(`${err}`);
+                });
+            });
+          },
+          handleLikedCardClick: (_id) => {
+            if (
+              card.placeLikeIcon.classList.contains("place__like-icon_active")
+            ) {
+              //console.log(card._likes);
+              api
+                .deleteLikes(_id)
+                .then((res) => {
+                  card.updateLikes();
+                  card.showLikes(res.likes.length);
+                })
+                .catch((err) => {
+                  console.log(`${err}`);
+                });
+            } else {
+              api
+                .addLikes(_id)
+                .then((res) => {
+                  card.likedCard();
+                  card.showLikes(res.likes.length);
+                })
+                .catch((err) => {
+                  console.log(`${err}`);
+                });
+            }
+          },
+        },
+        ".card-template",
+        userData._id
+      );
 
-    // New place card object
-    const newPlaceObject = {
-      name: newPlaceTitle,
-      link: newPlaceURL,
-    };
+      const cardElement = card.createCard();
 
-    // Add new card to the server
+      cards.addItem(cardElement);
+    }
+
+    // render cards on the page
+    cards.renderElements();
+
+    function addNewCards(inputValues) {
+      const newPlaceTitle = inputValues["image-text"];
+      const newPlaceURL = inputValues["image-link"];
+
+      // New place card object
+      const newPlaceObject = {
+        name: newPlaceTitle,
+        link: newPlaceURL,
+      };
+
+      // Add new card to the server
+      api
+        .setnewCard(newPlaceObject.name, newPlaceObject.link)
+        .then((newCardData) => {
+          renderCard(newCardData);
+        })
+        .catch((err) => {
+          console.log(`${err}`);
+        });
+    }
+
+    // create Add-place popup form
+    const addPlacePopupForm = new PopupWithForm(
+      ".popup_type_add-place",
+      (inputValues) => {
+        addNewCards(inputValues);
+
+        addPlacePopupForm.close();
+      }
+    );
+
+    addPlacePopupForm.setEventListeners();
+
+    //open Add-place modal
+    addPlaceButton.addEventListener("click", () => {
+      addPlacePopupForm.open();
+    });
+
+    // retrieve user data
+    profileData.setUserInfo(
+      userData.name,
+      userData.about,
+      userData.avatar,
+      userData._id
+    );
+  })
+  .catch((err) => {
+    console.log(`${err}`);
+  });
+const editPopupForm = new PopupWithForm(
+  ".popup_type_edit-profile",
+  (inputValues) => {
+    // update user information
+
     api
-      .setnewCard(newPlaceObject.name, newPlaceObject.link)
-      .then((newCardData) => {
-        renderCard(newCardData);
+      .editProfile(inputValues.name, inputValues.description)
+      .then((res) => {
+        profileData.setUserInfo(res.name, res.about, res.avatar);
+
+        editPopupForm.close();
+      })
+      .catch((err) => {
+        console.log(`${err}`);
       });
+    onLoading(false, editProfilePopupForm);
   }
-
-  // create Add-place popup form
-  const addPlacePopupForm = new PopupWithForm(".popup_type_add-place", () => {
-    addNewCards();
-
-    addPlacePopupForm.close();
-  });
-
-  addPlacePopupForm.setEventListeners();
-
-  //open Add-place modal
-  addPlaceButton.addEventListener("click", () => {
-    addPlacePopupForm.open();
-  });
-
-  // retrieve user data
-  profileData.setUserInfo(
-    userData.name,
-    userData.about,
-    userData.avatar,
-    userData._id
-  );
-});
-const editPopupForm = new PopupWithForm(".popup_type_edit-profile", () => {
-  // update user information
-
-  api.editProfile(nameFormInput.value, jobFormInput.value).then((res) => {
-    profileData.setUserInfo(res.name, res.about, res.avatar);
-
-    editPopupForm.close();
-  });
-  onLoading(false, editProfilePopupForm);
-});
+);
 
 editPopupForm.setEventListeners();
 
@@ -182,11 +213,16 @@ editButton.addEventListener("click", () => {
 // change profile picture popup
 const changeProfileAvatar = new PopupWithForm(
   ".popup_type_change-profile-picture",
-  () => {
-    api.updateAvatar(imageUrl.value).then((res) => {
-      profileData.setAvatar(res.avatar);
-      changeProfileAvatar.close();
-    });
+  (inputValues) => {
+    api
+      .updateAvatar(inputValues["image-link"])
+      .then((res) => {
+        profileData.setAvatar(res.avatar);
+        changeProfileAvatar.close();
+      })
+      .catch((err) => {
+        console.log(`${err}`);
+      });
 
     onLoading(false, changeProfileAvatarForm);
   }
