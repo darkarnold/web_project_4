@@ -26,6 +26,17 @@ import {
 const imagePopup = new PopupWithImage(".popup_type_display-image");
 imagePopup.setEventListeners();
 
+// Improve UX by showing textInput on loading
+
+function onLoading(isLoading, form) {
+  const submitButton = form.querySelector(".button_value_save");
+  if (isLoading) {
+    submitButton.textContent = "Saving...";
+  } else {
+    submitButton.textContent = "Save";
+  }
+}
+
 /* create the cards and iterate over array of cards 
 and render the cards on the page */
 
@@ -40,8 +51,6 @@ const profileData = new UserInfo({
 
 //render user data and user cards after their requests are resolved
 api.getAppInfo().then(([userData, cardData]) => {
-  console.log("AppInfo", [cardData, userData]);
-  //console.log("cardid:", [cardData._id]);
   const cards = new Section(
     {
       items: cardData,
@@ -75,7 +84,7 @@ api.getAppInfo().then(([userData, cardData]) => {
           confirmDeletePopup.handleSubmit(() => {
             api.deleteCard(_id).then(() => {
               console.log(_id);
-              card._deleteCard();
+              card.deleteCard();
               confirmDeletePopup.close();
             });
           });
@@ -151,17 +160,20 @@ api.getAppInfo().then(([userData, cardData]) => {
 });
 const editPopupForm = new PopupWithForm(".popup_type_edit-profile", () => {
   // update user information
-  api.editProfile(nameFormInput.value, jobFormInput.value).then((res) => {
-    profileData.setUserInfo(res.name, res.about);
-  });
 
-  editPopupForm.close();
+  api.editProfile(nameFormInput.value, jobFormInput.value).then((res) => {
+    profileData.setUserInfo(res.name, res.about, res.avatar);
+
+    editPopupForm.close();
+  });
+  onLoading(false, editProfilePopupForm);
 });
 
 editPopupForm.setEventListeners();
 
 editButton.addEventListener("click", () => {
   editPopupForm.open();
+  onLoading(true, editProfilePopupForm);
   const { name, job } = profileData.getUserInfo();
   nameFormInput.value = name;
   jobFormInput.value = job;
@@ -173,16 +185,20 @@ const changeProfileAvatar = new PopupWithForm(
   () => {
     api.updateAvatar(imageUrl.value).then((res) => {
       profileData.setAvatar(res.avatar);
+      changeProfileAvatar.close();
     });
-    changeProfileAvatar.close();
+
+    onLoading(false, changeProfileAvatarForm);
   }
 );
 
 updateAvatarButton.addEventListener("click", () => {
   changeProfileAvatar.open();
+  onLoading(true, changeProfileAvatarForm);
 });
 
 changeProfileAvatar.setEventListeners();
+
 // form Validation
 const editProfileValidator = new FormValidator(settings, editProfilePopupForm);
 const addPlaceValidator = new FormValidator(

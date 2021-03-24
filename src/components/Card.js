@@ -54,14 +54,9 @@ class Card {
     return this._cardElement;
   }
 
-  /*_toggleLikeIconState(evt) {
-    evt.target.classList.toggle("place__like-icon_active");
-  }*/
-
   isLiked() {
     if (this._likes.some((like) => like._id === this._userId)) {
       this.placeLikeIcon.classList.add("place__like-icon_active");
-      //this.showLikes(this._likes.length);
     }
   }
 
@@ -69,13 +64,11 @@ class Card {
     this._cardElement.querySelector(
       ".place__like-icon_count"
     ).textContent = count;
-
-    //this.isLiked();
   }
 
-  _deleteCard() {
+  deleteCard() {
     this._cardElement.remove(".place");
-    //this._cardElement = null;
+    this._cardElement = null;
   }
 
   _displayDeleteIcon() {
@@ -85,7 +78,6 @@ class Card {
   }
 
   _setEventListeners() {
-    //this.placeLikeIcon = this._cardElement.querySelector(".place__like-icon");
     this._placeDeleteIcon = this._cardElement.querySelector(
       ".place__delete-icon"
     );
@@ -95,7 +87,6 @@ class Card {
 
     this.placeLikeIcon.addEventListener("click", () => {
       this._handleLikedCardClick(this._id);
-      //this._toggleLikeIconState;
     });
 
     // remove card
