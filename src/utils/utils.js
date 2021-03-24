@@ -15,7 +15,7 @@ const settings = {
 const profile = pageContainer.querySelector(".profile");
 const profileInfo = profile.querySelector(".profile__info");
 
-//popup section
+//popup form section
 const editProfilePopupForm = pageContainer.querySelector(
   ".popup__form_type_edit-profile"
 );
@@ -23,10 +23,15 @@ const addPlacePopupFormSelector = pageContainer.querySelector(
   ".popup__form_type_add-place"
 );
 
-// edit buttons
+const changeProfileAvatarForm = pageContainer.querySelector(
+  ".popup__form_type_change-profile-picture"
+);
+
+// buttons
 const editButton = profileInfo.querySelector(".button_value_edit");
 const addPlaceButton = profile.querySelector(".button_value_add");
 
+const updateAvatarButton = pageContainer.querySelector(".overlay__icon");
 // select the input fields
 const nameFormInput = editProfilePopupForm.querySelector(
   ".popup__input_val_name"
@@ -36,14 +41,14 @@ const jobFormInput = editProfilePopupForm.querySelector(
 );
 const titleFormInput = pageContainer.querySelector(".popup__input_val_title");
 const linkFormInput = pageContainer.querySelector(".popup__input_val_link");
-
+const imageUrl = pageContainer.querySelector(".popup__input_val_url");
 // class for image container
 const places = ".places__grid";
 
 const placeSelector = document.querySelector(places);
 
 // Card rendering
-
+/*
 const initialCards = [
   {
     name: "Paradise Coast",
@@ -82,7 +87,7 @@ const initialCards = [
     alt: "snow peaked mountains",
   },
 ];
-
+*/
 export {
   pageContainer,
   editButton,
@@ -96,5 +101,7 @@ export {
   editProfilePopupForm,
   addPlacePopupFormSelector,
   settings,
-  initialCards,
+  changeProfileAvatarForm,
+  updateAvatarButton,
+  imageUrl,
 };
